@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Compass, ShieldCheck, User, GraduationCap, ArrowRight, Sparkles } from 'lucide-react';
 import { supabaseBrowserClient } from '@/lib/supabase/client';
 
-export default function SignInPage() {
+function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
@@ -220,5 +220,24 @@ export default function SignInPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[calc(100vh-160px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-md w-full bg-white p-8 sm:p-10 rounded-2xl shadow-xl border border-stone-200 text-center">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-stone-900 text-amber-400 mb-4 animate-pulse">
+              <Compass className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-medium text-stone-600">Loading sign in...</p>
+          </div>
+        </div>
+      }
+    >
+      <SignInContent />
+    </Suspense>
   );
 }
